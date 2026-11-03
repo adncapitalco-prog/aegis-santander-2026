@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # =============================================================================
 # AEGIS-INTELLECT - dashboard estrategico  (GENERADO - no editar a mano)
-# Generado: 2026-11-02 23:03
+# Generado: 2026-11-03 11:19
 # Fuente: C:\Users\Javier\Documents\AEGIS-POLITICA\08_Reportes\Atlas_Detallado\detalle_candidatos_santander.csv
 # Sello SHA256 de la fuente: 8be7b6503023e11eebe5d217cce3d4d195a9cb4525a6dc3c55c4f845eb562300
 #
@@ -24,8 +24,38 @@ import streamlit as st
 
 PALETA = {"acento_alerta": "#D32F2F", "exito": "#1B7A3D", "fondo": "#F8F9FA", "primario": "#002B5C", "secundario": "#457B9D", "tarjeta": "#FFFFFF"}
 FUENTE = "'Inter', 'Segoe UI', sans-serif"
-RUTA_DETALLE = r"C:\Users\Javier\Documents\AEGIS-POLITICA\08_Reportes\Atlas_Detallado\detalle_candidatos_santander.csv"
-RUTA_PREDICTIVO = r"C:\Users\Javier\Documents\AEGIS-POLITICA\08_Reportes\Atlas_Predictivo\anomalias_y_clusters.csv"
+# --- RUTAS PORTABLES ---------------------------------------------------------
+# El tablero corre en dos entornos: la PC del analista y Streamlit Cloud.
+# En la nube los datos viajan con el repo, en data/. En local estan en el
+# vault. Se busca en ese orden y se usa lo primero que exista, asi el mismo
+# archivo funciona en ambos sin tocar codigo.
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(BASE_DIR, "data")
+
+# Respaldo local: solo se usa si data/ no existe.
+_RUTA_LOCAL_DETALLE = r"C:\Users\Javier\Documents\AEGIS-POLITICA\08_Reportes\Atlas_Detallado\detalle_candidatos_santander.csv"
+_RUTA_LOCAL_PREDICTIVO = r"C:\Users\Javier\Documents\AEGIS-POLITICA\08_Reportes\Atlas_Predictivo\anomalias_y_clusters.csv"
+
+
+def resolver(nombre_data, respaldo_local):
+    """Devuelve la primera ruta que exista: data/ primero, respaldo despues."""
+    candidato = os.path.join(DATA_DIR, nombre_data)
+    if os.path.exists(candidato):
+        return candidato
+    if respaldo_local and os.path.exists(respaldo_local):
+        return respaldo_local
+    return None
+
+
+RUTA_DETALLE = resolver("detalle_candidatos_santander.zip", _RUTA_LOCAL_DETALLE) \
+    or resolver("detalle_candidatos_santander.csv", _RUTA_LOCAL_DETALLE)
+RUTA_PREDICTIVO = resolver("anomalias_y_clusters.csv", _RUTA_LOCAL_PREDICTIVO)
+RUTA_MAESTRO = resolver("atlas_santander_maestro.csv",
+                        os.path.join(os.path.dirname(_RUTA_LOCAL_DETALLE),
+                                     "atlas_santander_maestro.csv"))
+RUTA_PARTIDOS = resolver("atlas_santander_partidos.csv",
+                         os.path.join(os.path.dirname(_RUTA_LOCAL_DETALLE),
+                                      "atlas_santander_partidos.csv"))
 SELLO_DATOS = "8be7b6503023e11eebe5d217cce3d4d195a9cb4525a6dc3c55c4f845eb562300"
 
 NO_APROVECHADO = "Voto no aprovechado"
@@ -126,8 +156,14 @@ def autenticar():
 # --- datos -------------------------------------------------------------------
 @st.cache_data(show_spinner="Cargando detalle de Santander...")
 def cargar(ruta):
-    """Lee el detalle una sola vez y devuelve un DataFrame normalizado."""
-    df = pd.read_csv(ruta, encoding="utf-8-sig", dtype=str, keep_default_na=False)
+    """Lee el detalle una sola vez y devuelve un DataFrame normalizado.
+
+    Acepta .csv y .zip: en la nube el detalle viaja comprimido para no
+    cargar el repositorio con 30 MB, y pandas descomprime al vuelo.
+    """
+    compresion = "zip" if str(ruta).lower().endswith(".zip") else None
+    df = pd.read_csv(ruta, encoding="utf-8-sig", dtype=str, keep_default_na=False,
+                     compression=compresion)
     df.columns = [c.strip().lower() for c in df.columns]
     df = df.rename(columns={"anio_eleccion": "anio",
                             "nombre_partido": "partido",
@@ -285,8 +321,16 @@ def main():
     st.caption("AEGIS-INTELLECT v2.0 · MODO PALANTIR · el detalle se lee completo · "
                "los codigos sin nombre se etiquetan, no se adivinan.")
 
-    if not os.path.exists(RUTA_DETALLE):
-        st.error("No se encuentra la fuente: " + RUTA_DETALLE)
+    # Validacion fail-closed: si falta una fuente se dice cual y no se sigue.
+    faltantes = []
+    if not RUTA_DETALLE:
+        faltantes.append("detalle_candidatos_santander.zip (o .csv) en data/")
+    if not RUTA_PREDICTIVO:
+        faltantes.append("anomalias_y_clusters.csv en data/")
+    if faltantes:
+        st.error("No se encuentra la fuente: " + " · ".join(faltantes))
+        st.caption("Coloca los archivos en la carpeta data/ junto a app.py. "
+                   "Busqueda realizada en: " + DATA_DIR)
         st.stop()
 
     df = cargar(RUTA_DETALLE)
@@ -311,6 +355,7 @@ def main():
         municipios = sorted(base["municipio"].unique())
         municipio_sel = st.selectbox("Municipio", ["Todos"] + municipios, index=0)
         st.markdown("---")
+        st.caption("Datos: " + os.path.basename(str(RUTA_DETALLE)))
         st.caption("Sello: " + SELLO_DATOS[:16] + "...")
         st.caption("Exportacion: CSV. PDF/PNG requiere kaleido, no instalado.")
 
