@@ -1,0 +1,10 @@
+{
+  "_descripcion": "Manifiesto de integridad del paquete de despliegue.",
+  "_generado": "2026-11-04",
+  "fuentes": {
+    "data/anomalias_y_clusters.csv": "df0d8ef4d443a7eaaeda70c15dac3653bfd1a15727408fd0170258d4b79932ec",
+    "data/atlas_santander_maestro.csv": "050a39b4a9e5a9ac65171e4f9533a6f6ea6fe57e5a03cecd9502406107b6b733",
+    "data/atlas_santander_partidos.csv": "93faf7657d4b265d1fb53196667f8bf3339b1fc3e51507f1337c09ae83ad9ba1",
+    "data/detalle_candidatos_santander.zip": "a3928ddb0839bd545797c8d28c3c24c1f28f407289601c5f0c57ec7e28cf5242"
+  }
+}
