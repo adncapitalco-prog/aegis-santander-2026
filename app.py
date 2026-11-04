@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # =============================================================================
 # AEGIS-INTELLECT - dashboard estrategico  (GENERADO - no editar a mano)
-# Generado: 2026-11-04 14:26
+# Generado: 2026-11-04 16:56
 # Fuente: C:\Users\Javier\Documents\AEGIS-POLITICA\08_Reportes\Atlas_Detallado\detalle_candidatos_santander.csv
 # Sello SHA256 de la fuente: 8be7b6503023e11eebe5d217cce3d4d195a9cb4525a6dc3c55c4f845eb562300
 #
@@ -498,10 +498,17 @@ def main():
             c = st.columns(4)
             terr = int((pred["cluster"].str.startswith("2")).sum())
             opor = int((pred["cluster"].str.startswith("4")).sum())
-            c[0].metric("Puestos con alerta", int((pred["alertas"].str.len() > 0).sum()))
-            c[1].metric("Municipios en terremoto", terr)
-            c[2].metric("Oportunidades flotantes", opor)
-            c[3].metric("Votos 30XX (depto)", miles(353282))
+            c[0].metric("Puestos con alerta",
+                        int((pred["alertas"].str.len() > 0).sum()),
+                        help="Puestos que dispararon al menos una regla forense: "
+                             "volumen atipico, perdida elevada o Benford.")
+            c[1].metric("Puestos en ruptura", terr,
+                        help="Puestos donde el partido lider cambio entre 2023 y 2026.")
+            c[2].metric("Puestos con voto flotante", opor,
+                        help="Puestos donde ningun partido supera el 25 % de los votos.")
+            c[3].metric("Votos sin partido verificado", miles(353282),
+                        help="Votos emitidos por listas cuyo nombre no esta confirmado. "
+                             "Se etiquetan; no se les asigna dueno.")
             st.caption("Los 353.282 votos de los codigos 30XX no tienen dueno verificado: "
                        "es la mayor opacidad del modelo, no un error de calculo.")
 
@@ -514,7 +521,9 @@ def main():
                                 "Cuantos puestos hay en cada cluster conductual"),
                 width="stretch")
 
-            st.markdown("**Puestos con alerta forense**")
+            st.markdown("**Detalle por cluster conductual**")
+            st.caption("La columna cluster describe el comportamiento del MUNICIPIO; "
+                       "el conteo de filas es de PUESTOS.")
             alertas = pred[pred["alertas"].str.len() > 0][
                 ["municipio", "zona", "puesto", "cluster", "total", "tasa", "z",
                  "benford", "io", "alertas"]].sort_values("tasa", ascending=False)
