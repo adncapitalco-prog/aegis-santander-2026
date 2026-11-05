@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # =============================================================================
 # AEGIS-INTELLECT - dashboard estrategico  (GENERADO - no editar a mano)
-# Generado: 2026-11-04 16:56
+# Generado: 2026-11-04 18:34
 # Fuente: C:\Users\Javier\Documents\AEGIS-POLITICA\08_Reportes\Atlas_Detallado\detalle_candidatos_santander.csv
 # Sello SHA256 de la fuente: 8be7b6503023e11eebe5d217cce3d4d195a9cb4525a6dc3c55c4f845eb562300
 #
@@ -96,16 +96,25 @@ def pct(n, decimales=1):
 
 
 def paleta_grafico():
-    """Colores segun el tema. Fondo OPACO: el transparente hereda el tema."""
+    """Colores de los graficos.
+
+    Fondo TRANSPARENTE: el lienzo hereda el color de la pagina, asi el grafico
+    no compite con la tarjeta que lo contiene.
+
+    Lo que NO puede ser transparente es el criterio del texto. Si el texto se
+    fija en oscuro y alguien pone la app en tema oscuro, el grafico desaparece:
+    fue exactamente el defecto que se corrigio antes. Por eso el color del
+    texto y de la rejilla siguen al tema, aunque el fondo no lo haga.
+    """
     try:
         base = (st.get_option("theme.base") or "light").lower()
     except Exception:
         base = "light"
     if base == "dark":
-        return {"texto": "#FFFFFF", "fondo": "#0E1117", "grid": "#2A2F3A",
+        return {"texto": "#FFFFFF", "fondo": "rgba(0,0,0,0)", "grid": "#2A2F3A",
                 "titulo": "#FFFFFF", "neutro": "#9AA5B1"}
-    return {"texto": "#1a1a1a", "fondo": "#FFFFFF", "grid": "#E8ECEF",
-            "titulo": "#002B5C", "neutro": "#5A6B7B"}
+    return {"texto": "#262730", "fondo": "rgba(0,0,0,0)", "grid": "#E5E7EB",
+            "titulo": "#002B5C", "neutro": "#6B7280"}
 
 
 def entidad(fila):
