@@ -93,6 +93,11 @@ class ContratoReporte:
     # el nodo de accion, pero no sabe que son: podrian ser puestos de
     # votacion, valvulas, activos o cuentas. Es el dominio quien los nombra.
     puestos_objetivo: List[str] = field(default_factory=list)
+    # Prioridad por objetivo. NO es un escalar: el reporte cubre varios
+    # puestos y cada uno tiene su propio nivel. Un solo campo obligaria a
+    # resumir cinco diagnosticos distintos en uno, y eso es perder informacion.
+    # Cada elemento: {nombre, nivel, etiqueta, accion, gap, z, por_que}
+    prioridades: List[Dict[str, Any]] = field(default_factory=list)
     bloques: List[Bloque] = field(default_factory=list)
     pie: str = ""
     metadatos: Dict[str, str] = field(default_factory=dict)
@@ -120,6 +125,11 @@ class ContratoReporte:
                         % (indice, len(self.nodos))
                     )
         self.puestos_objetivo = [p.strip() for p in self.puestos_objetivo if p and p.strip()]
+        for pr in self.prioridades:
+            if pr.get("nivel") not in (1, 2, 3, 4):
+                raise ContratoInvalido(
+                    "Nivel de prioridad invalido en '%s': %s"
+                    % (pr.get("nombre", "?"), pr.get("nivel")))
         if not self.accion.strip():
             raise ContratoInvalido(
                 "El reporte necesita una accion. Un reporte sin accion no es un "
@@ -152,6 +162,7 @@ class ContratoReporte:
             "lineas": sum(len(b.lineas) for b in self.bloques),
             "roles": [n.rol for n in self.nodos],
             "puestos_objetivo": len(self.puestos_objetivo),
+            "prioridades": len(self.prioridades),
         }
 
 

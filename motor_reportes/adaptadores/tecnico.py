@@ -148,15 +148,44 @@ def desde_contrato(contrato: ContratoReporte) -> str:
                  "rango. El piso es lo que se puede prometer; el techo, lo que se "
                  "podria capturar si todo funcionara.")
 
+    # 2b · PRIORIDAD POR PUESTO
+    prioridades = list(getattr(contrato, "prioridades", []) or [])
+    if prioridades:
+        L += _seccion(3, "Prioridad de intervencion")
+        L.append("La prioridad cruza dos senales: voto recuperable absoluto "
+                 "(percentil 80) y desviacion ajustada por tamano frente a la "
+                 "red de vecinos (percentil 90 del z de la proporcion).")
+        L.append("")
+        filas = []
+        for pr in prioridades:
+            filas.append([
+                pr.get("nombre", ""),
+                "N%d" % pr["nivel"],
+                pr.get("etiqueta", ""),
+                _num(pr.get("gap", 0)),
+                "%+.2f" % float(pr.get("z", 0.0)),
+                pr.get("accion", ""),
+            ])
+        L += _tabla(["Puesto", "Prioridad", "Etiqueta", "Voto recuperable",
+                     "Desviacion z", "Accion recomendada"], filas)
+        L.append("")
+        L.append("**Lectura:** N1 exige ambas condiciones. N3 es volumen sin "
+                 "anomalia. N2 es anomalia sin volumen suficiente. N4 no "
+                 "requiere accion.")
+        # renumerar la seccion siguiente
+        metodos_num = 4
+    else:
+        metodos_num = 3
+
     # 3 · METODOLOGIA
     if metodos:
-        L += _seccion(3, "Metodologia")
+        L += _seccion(metodos_num, "Metodologia")
         for m in metodos:
             L.append("- %s" % m)
 
     # 4 · FUENTES E INTEGRIDAD
     if fuentes:
-        L += _seccion(4, "Fuentes e integridad")
+        L += _seccion(metodos_num + 1, "Fuentes e integridad")
         filas = []
         for f in fuentes:
             filas.append([
@@ -171,7 +200,7 @@ def desde_contrato(contrato: ContratoReporte) -> str:
 
     # 5 · CONTROL DE CALIDAD
     if qa:
-        L += _seccion(5, "Control de calidad")
+        L += _seccion(metodos_num + 2, "Control de calidad")
         controles = qa.get("controles") or []
         if controles:
             L += _tabla(["Control", "Resultado", "Detalle"],
@@ -183,12 +212,17 @@ def desde_contrato(contrato: ContratoReporte) -> str:
 
     # 6 · LIMITES
     if limites:
-        L += _seccion(6, "Limites y advertencias")
+        L += _seccion(metodos_num + 3, "Limites y advertencias")
+        L.append("- **El PBC no aplica correccion.** Hay una sola pareja de "
+                 "elecciones de distinto tipo (2023 local, 2026 nacional), y con "
+                 "una observacion no se estima la varianza del sesgo. Por eso "
+                 "las anomalias N1 y N2 se etiquetan con \"incertidumbre alta\": "
+                 "se prefiere un rango ancho a un factor inventado.")
         for limite in limites:
             L.append("- %s" % limite)
 
     # 7 · REPRODUCIBILIDAD
-    L += _seccion(7, "Reproducibilidad")
+    L += _seccion(metodos_num + 4, "Reproducibilidad")
     L.append("Para reconstruir este informe:")
     L.append("")
     L.append("```")

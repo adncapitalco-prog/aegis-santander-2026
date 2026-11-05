@@ -308,6 +308,39 @@ def prueba_niveles():
     palabras = len(f.split())
     check("feynman cabe en 2 paginas", palabras < 1000, "%d palabras" % palabras)
 
+    # --- prioridad unificada ---
+    check("contrato lleva prioridades", len(contrato_unico.prioridades) > 0,
+          "%d prioridades" % len(contrato_unico.prioridades))
+    niveles = [p["nivel"] for p in contrato_unico.prioridades]
+    check("todos los niveles son 1-4", all(n in (1, 2, 3, 4) for n in niveles),
+          str(niveles))
+
+    t = textos.get("tecnico", "")
+    f = textos.get("feynman", "")
+    check("tecnico incluye tabla de prioridad", "Prioridad de intervencion" in t, "")
+    check("tecnico trae desviacion z", "Desviacion z" in t, "")
+    check("tecnico trae accion recomendada", "Accion recomendada" in t, "")
+    check("tecnico declara el limite del PBC", "PBC no aplica" in t, "")
+    check("feynman tiene seccion de prioridad", "Prioridad: qué atender" in f, "")
+    check("feynman nombra la prioridad de cada puesto",
+          all(p["accion"] in f for p in contrato_unico.prioridades[:3]), "")
+    check("feynman explica el criterio doble",
+          "cuánto voto se puede recuperar" in f, "")
+
+    # el contrato rechaza un nivel invalido
+    try:
+        import copy
+        malo = copy.deepcopy(contrato_unico)
+        malo.prioridades = [{"nombre": "x", "nivel": 9, "etiqueta": "",
+                             "accion": "", "gap": 0, "z": 0}]
+        contrato.ContratoReporte(
+            titulo=malo.titulo, subtitulo=malo.subtitulo, nodos=malo.nodos,
+            conexiones=malo.conexiones, accion=malo.accion,
+            prioridades=malo.prioridades)
+        check("rechaza nivel de prioridad invalido", False, "acepto nivel 9")
+    except contrato.ContratoInvalido:
+        check("rechaza nivel de prioridad invalido", True, "ContratoInvalido")
+
     # --- ninguno usa jerga prohibida ---
     jerga = ("Z-score", "Pareto", "cluster", "cuociente", "cifra repartidora")
     for nombre, texto in textos.items():

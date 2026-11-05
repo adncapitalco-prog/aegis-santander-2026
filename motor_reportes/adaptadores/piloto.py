@@ -129,6 +129,7 @@ def construir(datos: Dict) -> ContratoReporte:
         conexiones=conexiones,
         accion=datos["accion"],
         puestos_objetivo=objetivos,
+        prioridades=datos.get("prioridades", []),
         bloques=bloques,
         pie=datos.get("pie", ""),
         anexos=datos.get("anexos", {}),

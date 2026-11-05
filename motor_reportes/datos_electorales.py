@@ -127,6 +127,39 @@ def _leer_detalle(ruta: str) -> List[Dict]:
         return list(csv.DictReader(fh))
 
 
+PREDICTIVO = os.path.join(RAIZ, "08_Reportes", "Atlas_Predictivo",
+                          "anomalias_y_clusters.csv")
+
+
+def _prioridades(municipio: str) -> Dict:
+    """Lee la matriz de prioridad del CSV predictivo y la indexa por puesto.
+
+    Si el archivo no existe o le faltan columnas, devuelve un diccionario
+    vacio: el reporte sigue funcionando sin la seccion de prioridad, y lo
+    declara. No se inventa un nivel.
+    """
+    if not os.path.exists(PREDICTIVO):
+        return {}
+    salida = {}
+    try:
+        with open(PREDICTIVO, encoding="utf-8-sig", newline="") as fh:
+            for r in csv.DictReader(fh):
+                if r["municipio"].strip().upper() != municipio.upper():
+                    continue
+                if not r.get("prioridad_nivel"):
+                    continue
+                salida[(r["zona"].strip(), r["puesto"].strip())] = {
+                    "nivel": int(r["prioridad_nivel"]),
+                    "etiqueta": r["prioridad_etiqueta"],
+                    "accion": r["prioridad_accion"],
+                    "gap": int(float(r.get("gap_absoluto") or 0)),
+                    "z": float(r.get("desviacion_z") or 0.0),
+                }
+    except (KeyError, ValueError):
+        return {}
+    return salida
+
+
 def _puestos(municipio: str, RUTA_DETALLE: str = None,
              RUTA_MAESTRO: str = None) -> List[Dict]:
     filas = [r for r in _leer_detalle(RUTA_DETALLE or DETALLE)
@@ -151,6 +184,7 @@ def _puestos(municipio: str, RUTA_DETALLE: str = None,
             else:
                 p[k]["v26"] += v
 
+    _prio = _prioridades(municipio)
     nombres = {}
     with open(RUTA_MAESTRO or MAESTRO, encoding="utf-8-sig", newline="") as fh:
         for r in csv.DictReader(fh):
@@ -167,6 +201,7 @@ def _puestos(municipio: str, RUTA_DETALLE: str = None,
             "v23": d["v23"], "v26": d["v26"],
             "recuperable": d["bl"] + d["nu"] + caida,
             "blancos": d["bl"], "nulos": d["nu"], "no_marcados": d["nm"], "caida": caida,
+            "prioridad": _prio.get((k[0], k[1]), None),
         })
     puestos.sort(key=lambda x: -x["recuperable"])
     return puestos
@@ -305,6 +340,15 @@ def extraer(municipio: str = "BUCARAMANGA", horizonte: str = "2027",
         "accion": "MANDA 2 DELEGADOS A CADA UNO DE LOS %d PUESTOS" % len(top),
         "accion_detalle": "Esta semana. No la proxima.",
         "pie": "",
+        "prioridades": [
+            {"nombre": p.get("nombre_corto") or p["nombre"],
+             "nivel": p["prioridad"]["nivel"],
+             "etiqueta": p["prioridad"]["etiqueta"],
+             "accion": p["prioridad"]["accion"],
+             "gap": p["prioridad"]["gap"],
+             "z": p["prioridad"]["z"]}
+            for p in puestos[:5] if p.get("prioridad")
+        ],
         "anexos": _anexos(puestos, v23, v26, total, ruta_detalle, ruta_maestro),
         "_interno": {
             "puestos_analizados": len(puestos),

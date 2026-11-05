@@ -156,6 +156,34 @@ def desde_contrato(contrato: ContratoReporte) -> str:
                  "gente voto y no eligio, o donde la gente dejo de ir.")
         L.append("")
 
+    # --- Prioridad ---------------------------------------------------------
+    prioridades = list(getattr(contrato, "prioridades", []) or [])
+    if prioridades:
+        L.append("## Prioridad: qué atender primero")
+        L.append("")
+        L.append("No todos los puestos valen lo mismo. Dos cosas deciden:")
+        L.append("cuánto voto se puede recuperar, y si el puesto se comporta "
+                 "distinto a sus vecinos.")
+        L.append("")
+        for pr in prioridades[:5]:
+            color = {1: "el más urgente", 2: "problema de entorno",
+                     3: "volumen sin anomalía", 4: "sin acción"}.get(pr["nivel"], "")
+            L.append("- **%s** — %s." % (pr["nombre"], pr["etiqueta"]))
+            L.append("  %s Se pueden recuperar **%s** votos. Acción: **%s**."
+                     % (color.capitalize() + "." if color else "",
+                        _num(pr.get("gap", 0)), pr.get("accion", "")))
+            L.append("")
+        niveles = [p["nivel"] for p in prioridades]
+        if 1 in niveles:
+            L.append("Los de Prioridad 1 tienen las dos cosas a la vez: "
+                     "mucho voto perdido y un comportamiento que no cuadra "
+                     "con su entorno. Ahí no se puede esperar.")
+            L.append("")
+        if 4 in niveles:
+            L.append("Los de Prioridad 4 no se tocan. Perder un porcentaje alto "
+                     "en un puesto pequeño no es una oportunidad: es aritmética.")
+            L.append("")
+
     # --- Por que juntos ---------------------------------------------------
     if objetivos:
         L.append("## Por que estos y no otros")
