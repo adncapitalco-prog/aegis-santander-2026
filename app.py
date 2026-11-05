@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # =============================================================================
 # AEGIS-INTELLECT - dashboard estrategico  (GENERADO - no editar a mano)
-# Generado: 2026-11-05 11:45
+# Generado: 2026-11-05 16:03
 # Fuente: C:\Users\Javier\Documents\AEGIS-POLITICA\08_Reportes\Atlas_Detallado\detalle_candidatos_santander.csv
 # Sello SHA256 de la fuente: 8be7b6503023e11eebe5d217cce3d4d195a9cb4525a6dc3c55c4f845eb562300
 #
@@ -831,6 +831,9 @@ def main():
                         mun_rep.upper(), "2027",
                         ruta_detalle=RUTA_DETALLE,
                         ruta_maestro=RUTA_MAESTRO,
+                        # Sin esta ruta el reporte sale sin prioridades en la
+                        # nube: el valor por defecto apunta al vault.
+                        ruta_predictivo=RUTA_PREDICTIVO,
                     )
                     contrato_rep = motor["adaptadores"].piloto.construir(datos_rep)
                     clave = niveles[nivel_sel]
