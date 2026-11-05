@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # =============================================================================
 # AEGIS-INTELLECT - dashboard estrategico  (GENERADO - no editar a mano)
-# Generado: 2026-11-04 23:18
+# Generado: 2026-11-05 00:16
 # Fuente: C:\Users\Javier\Documents\AEGIS-POLITICA\08_Reportes\Atlas_Detallado\detalle_candidatos_santander.csv
 # Sello SHA256 de la fuente: 8be7b6503023e11eebe5d217cce3d4d195a9cb4525a6dc3c55c4f845eb562300
 #
@@ -233,9 +233,25 @@ def cargar_motor_reportes():
             try:
                 import importlib
                 import motor_reportes
+                # importlib.reload del paquete raiz NO recarga los submodulos.
+                # Si feynman.py cambia en disco con el servidor encendido,
+                # Streamlit sigue sirviendo el modulo viejo de memoria. Hay que
+                # recargar cada submodulo que el tablero usa.
+                for nombre_mod in ("motor_reportes.contrato",
+                                   "motor_reportes.renderizador",
+                                   "motor_reportes.datos_electorales",
+                                   "motor_reportes.adaptadores",
+                                   "motor_reportes.adaptadores.piloto",
+                                   "motor_reportes.adaptadores.tecnico",
+                                   "motor_reportes.adaptadores.feynman"):
+                    if nombre_mod in sys.modules:
+                        try:
+                            importlib.reload(sys.modules[nombre_mod])
+                        except Exception:
+                            pass
+                importlib.reload(motor_reportes)
                 from motor_reportes import adaptadores, renderizador
                 from motor_reportes.datos_electorales import extraer
-                importlib.reload(motor_reportes)
                 return {"adaptadores": adaptadores,
                         "renderizador": renderizador,
                         "extraer": extraer,
