@@ -106,6 +106,7 @@ def desde_contrato(contrato: ContratoReporte) -> str:
     L.append("")
 
     # --- Que paso ---------------------------------------------------------
+    prioridades = list(getattr(contrato, "prioridades", []) or [])
     L.append("## Que paso")
     L.append("")
     analogia = _analogia(contrato)
@@ -145,19 +146,26 @@ def desde_contrato(contrato: ContratoReporte) -> str:
     if objetivos:
         L.append("## Donde esta el voto, uno por uno")
         L.append("")
+        # Una sola cifra por puesto. Antes esta seccion usaba aporte_objetivo
+        # (blancos + nulos + caida) y la seccion de prioridad usaba el gap del
+        # CSV predictivo (blancos + nulos + no marcados + fuga). Dos numeros
+        # distintos para el mismo puesto, y el lector creia que uno estaba mal.
+        # Manda la cifra de prioridad, que es la que ve en el tablero.
+        gaps = {pr["nombre"]: pr.get("gap") for pr in prioridades} if prioridades else {}
+        aporte = anexos.get("aporte_objetivo", [])
         for i, nombre in enumerate(objetivos[:5], 1):
-            aporte = anexos.get("aporte_objetivo", [])
-            cifra = ""
-            if i - 1 < len(aporte):
-                cifra = " Ahi se pueden recuperar **%s** votos." % _num(aporte[i - 1])
-            L.append("%d. **%s.**%s" % (i, nombre, cifra))
+            cifra = gaps.get(nombre)
+            if cifra is None and i - 1 < len(aporte):
+                cifra = aporte[i - 1]
+            texto_cifra = (" Ahi se pueden recuperar **%s** votos." % _num(cifra)
+                           if cifra else "")
+            L.append("%d. **%s.**%s" % (i, nombre, texto_cifra))
             L.append("")
         L.append("No son los puestos con mas votos. Son los puestos donde mas "
                  "gente voto y no eligio, o donde la gente dejo de ir.")
         L.append("")
 
     # --- Prioridad ---------------------------------------------------------
-    prioridades = list(getattr(contrato, "prioridades", []) or [])
     if prioridades:
         L.append("## Prioridad: qué atender primero")
         L.append("")
