@@ -29,7 +29,7 @@ from .renderizador import (  # noqa: F401
 __version__ = "1.0.0"
 
 NIVELES = {
-    "piloto": "R-01 estricto · ASD-STE100 · cero jerga",
-    "tecnico": "Metodologia y trazabilidad (Etapa 5a)",
-    "feynman": "Explicacion desde cero (Etapa 5b)",
+    "piloto": "R-01 estricto · ASD-STE100 · cero jerga · SVG DEGRAU 2",
+    "tecnico": "Metodologia, trazabilidad y prioridad por puesto",
+    "feynman": "Explicacion desde cero con analogias y prioridad",
 }
