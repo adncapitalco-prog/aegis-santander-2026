@@ -131,18 +131,24 @@ PREDICTIVO = os.path.join(RAIZ, "08_Reportes", "Atlas_Predictivo",
                           "anomalias_y_clusters.csv")
 
 
-def _prioridades(municipio: str) -> Dict:
+def _prioridades(municipio: str, ruta_predictivo: str = None) -> Dict:
     """Lee la matriz de prioridad del CSV predictivo y la indexa por puesto.
+
+    La ruta es un PARAMETRO, no una constante. Cuando estaba fija apuntaba al
+    vault, y en la nube esa ruta no existe: el reporte salia sin prioridades y
+    con las cifras viejas, sin ningun error visible. Fue el fallo que costo
+    tres despliegues.
 
     Si el archivo no existe o le faltan columnas, devuelve un diccionario
     vacio: el reporte sigue funcionando sin la seccion de prioridad, y lo
     declara. No se inventa un nivel.
     """
-    if not os.path.exists(PREDICTIVO):
+    ruta = ruta_predictivo or PREDICTIVO
+    if not os.path.exists(ruta):
         return {}
     salida = {}
     try:
-        with open(PREDICTIVO, encoding="utf-8-sig", newline="") as fh:
+        with open(ruta, encoding="utf-8-sig", newline="") as fh:
             for r in csv.DictReader(fh):
                 if r["municipio"].strip().upper() != municipio.upper():
                     continue
@@ -161,7 +167,8 @@ def _prioridades(municipio: str) -> Dict:
 
 
 def _puestos(municipio: str, RUTA_DETALLE: str = None,
-             RUTA_MAESTRO: str = None) -> List[Dict]:
+             RUTA_MAESTRO: str = None,
+             RUTA_PREDICTIVO: str = None) -> List[Dict]:
     filas = [r for r in _leer_detalle(RUTA_DETALLE or DETALLE)
              if r["Municipio"] == municipio]
 
@@ -184,7 +191,7 @@ def _puestos(municipio: str, RUTA_DETALLE: str = None,
             else:
                 p[k]["v26"] += v
 
-    _prio = _prioridades(municipio)
+    _prio = _prioridades(municipio, RUTA_PREDICTIVO)
     nombres = {}
     with open(RUTA_MAESTRO or MAESTRO, encoding="utf-8-sig", newline="") as fh:
         for r in csv.DictReader(fh):
@@ -218,7 +225,8 @@ def _hash(ruta: str) -> str:
 
 
 def _anexos(puestos, v23, v26, total,
-            ruta_detalle: str = None, ruta_maestro: str = None) -> Dict:
+            ruta_detalle: str = None, ruta_maestro: str = None,
+            ruta_predictivo: str = None) -> Dict:
     """Datos de soporte para los niveles tecnico y Feynman.
 
     Aqui vive todo el conocimiento del dominio. Los adaptadores solo formatean.
@@ -313,13 +321,14 @@ def _anexos(puestos, v23, v26, total,
 
 
 def extraer(municipio: str = "BUCARAMANGA", horizonte: str = "2027",
-            ruta_detalle: str = None, ruta_maestro: str = None) -> Dict:
+            ruta_detalle: str = None, ruta_maestro: str = None,
+            ruta_predictivo: str = None) -> Dict:
     """Devuelve el diccionario plano que consume el adaptador.
 
     Las rutas son opcionales: si no se pasan, se usan las del vault. El
     dashboard pasa las suyas para funcionar igual en local y en la nube.
     """
-    puestos = _puestos(municipio, ruta_detalle, ruta_maestro)
+    puestos = _puestos(municipio, ruta_detalle, ruta_maestro, ruta_predictivo)
     v23 = sum(x["v23"] for x in puestos)
     v26 = sum(x["v26"] for x in puestos)
     total = sum(x["recuperable"] for x in puestos)

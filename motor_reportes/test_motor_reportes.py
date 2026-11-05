@@ -308,6 +308,22 @@ def prueba_niveles():
     palabras = len(f.split())
     check("feynman cabe en 2 paginas", palabras < 1000, "%d palabras" % palabras)
 
+    # --- regresion: la ruta del CSV predictivo debe ser parametro ---
+    # Cuando era constante apuntaba al vault, y en la nube esa ruta no existe.
+    # El reporte salia sin prioridades y con las cifras viejas, sin error.
+    import inspect
+    from motor_reportes import datos_electorales as _de
+    firma = inspect.signature(_de.extraer)
+    check("extraer() acepta ruta_predictivo", "ruta_predictivo" in firma.parameters,
+          "parametro presente" if "ruta_predictivo" in firma.parameters else "AUSENTE")
+    firma_prio = inspect.signature(_de._prioridades)
+    check("_prioridades() acepta ruta_predictivo",
+          "ruta_predictivo" in firma_prio.parameters,
+          "parametro presente" if "ruta_predictivo" in firma_prio.parameters else "AUSENTE")
+    # con una ruta inexistente devuelve vacio, no revienta
+    vacio = _de._prioridades("BUCARAMANGA", "/ruta/que/no/existe.csv")
+    check("_prioridades() tolera ruta ausente", vacio == {}, "devuelve {}")
+
     # --- prioridad unificada ---
     check("contrato lleva prioridades", len(contrato_unico.prioridades) > 0,
           "%d prioridades" % len(contrato_unico.prioridades))
