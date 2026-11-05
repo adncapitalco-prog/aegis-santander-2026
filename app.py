@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # =============================================================================
 # AEGIS-INTELLECT - dashboard estrategico  (GENERADO - no editar a mano)
-# Generado: 2026-11-04 18:34
+# Generado: 2026-11-04 23:18
 # Fuente: C:\Users\Javier\Documents\AEGIS-POLITICA\08_Reportes\Atlas_Detallado\detalle_candidatos_santander.csv
 # Sello SHA256 de la fuente: 8be7b6503023e11eebe5d217cce3d4d195a9cb4525a6dc3c55c4f845eb562300
 #
@@ -504,18 +504,27 @@ def main():
         if pred is None:
             st.info("No existe el CSV predictivo. Ejecute motor_predictivo.py para generarlo.")
         else:
+            tiene_prioridad = "prioridad_nivel" in pred.columns
             c = st.columns(4)
             terr = int((pred["cluster"].str.startswith("2")).sum())
             opor = int((pred["cluster"].str.startswith("4")).sum())
-            c[0].metric("Puestos con alerta",
-                        int((pred["alertas"].str.len() > 0).sum()),
-                        help="Puestos que dispararon al menos una regla forense: "
-                             "volumen atipico, perdida elevada o Benford.")
-            c[1].metric("Puestos en ruptura", terr,
+            if tiene_prioridad:
+                n1 = int((pred["prioridad_nivel"] == 1).sum())
+                n2 = int((pred["prioridad_nivel"] == 2).sum())
+                c[0].metric("Prioridad 1 · crítica", n1,
+                            help="Puestos con mucho voto recuperable Y que se apartan "
+                                 "de lo que su red predice. Acción inmediata.")
+                c[1].metric("Prioridad 2 · estructural", n2,
+                            help="Puestos que se apartan de su red pero mueven poco "
+                                 "voto por sí solos. El problema es del entorno.")
+            else:
+                c[0].metric("Puestos con alerta",
+                            int((pred["alertas"].str.len() > 0).sum()))
+                c[1].metric("Puestos en ruptura", terr,
+                            help="Puestos donde el partido lider cambio entre 2023 y 2026.")
+            c[2].metric("Puestos en ruptura", terr,
                         help="Puestos donde el partido lider cambio entre 2023 y 2026.")
-            c[2].metric("Puestos con voto flotante", opor,
-                        help="Puestos donde ningun partido supera el 25 % de los votos.")
-            c[3].metric("Votos sin partido verificado", miles(353282),
+            c[3].metric("Votos sin partido verificado", miles(413495),
                         help="Votos emitidos por listas cuyo nombre no esta confirmado. "
                              "Se etiquetan; no se les asigna dueno.")
             st.caption("Los 353.282 votos de los codigos 30XX no tienen dueno verificado: "
@@ -530,14 +539,28 @@ def main():
                                 "Cuantos puestos hay en cada cluster conductual"),
                 width="stretch")
 
-            st.markdown("**Detalle por cluster conductual**")
-            st.caption("La columna cluster describe el comportamiento del MUNICIPIO; "
-                       "el conteo de filas es de PUESTOS.")
-            alertas = pred[pred["alertas"].str.len() > 0][
-                ["municipio", "zona", "puesto", "cluster", "total", "tasa", "z",
-                 "benford", "io", "alertas"]].sort_values("tasa", ascending=False)
-            st.dataframe(alertas, width="stretch", hide_index=True)
-            boton_descarga(alertas, "alertas_forenses.csv", "dl_alertas")
+            if tiene_prioridad:
+                st.markdown("**Puestos por prioridad de acción**")
+                st.caption(
+                    "La prioridad cruza dos señales: cuánto voto se puede recuperar "
+                    "en el puesto, y cuánto se aparta de lo que su red de vecinos "
+                    "predice. N1 exige ambas. N3 es volumen sin anomalía. "
+                    "N2 es anomalía sin volumen. N4 no requiere acción.")
+                tabla_prior = pred[[
+                    "municipio", "zona", "puesto", "prioridad_nivel",
+                    "prioridad_etiqueta", "prioridad_accion", "gap_absoluto",
+                    "tasa", "tasa_red", "desviacion_z",
+                ]].sort_values(["prioridad_nivel", "gap_absoluto"],
+                               ascending=[True, False])
+                st.dataframe(tabla_prior, width="stretch", hide_index=True)
+                boton_descarga(tabla_prior, "prioridad_unificada.csv", "dl_prio")
+            else:
+                st.markdown("**Detalle por alerta**")
+                alertas = pred[pred["alertas"].str.len() > 0][
+                    ["municipio", "zona", "puesto", "cluster", "total", "tasa",
+                     "z", "io", "alertas"]].sort_values("tasa", ascending=False)
+                st.dataframe(alertas, width="stretch", hide_index=True)
+                boton_descarga(alertas, "alertas_forenses.csv", "dl_alertas")
 
     # ---------------- PESTANA 2 ----------------
     with t2:
