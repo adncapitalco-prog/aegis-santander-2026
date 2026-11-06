@@ -254,6 +254,27 @@ def desde_contrato(contrato: ContratoReporte) -> str:
                  "curul al alcance. Los demas dependen de cuantos votos entren.")
         L.append("")
 
+    # --- Senal -------------------------------------------------------------
+    senal = anexos.get("senal") or {}
+    if senal.get("destacada"):
+        d = senal["destacada"]
+        L.append("## La Señal que Ancla la Expectativa")
+        L.append("")
+        L.append(senal.get("narrativa", ""))
+        L.append("")
+        L.append("Sensibilidad de **%s**: %.2f de 1,00 (%s). Reduccion "
+                 "estimada de la incertidumbre: **%.1f %%**."
+                 % (d.get("unidad", ""), d.get("sensibilidad", 0.0),
+                    d.get("tramo", "").lower(), d.get("reduccion_entropia", 0.0)))
+        L.append("")
+        if senal.get("aviso"):
+            L.append("*%s*" % senal["aviso"])
+            L.append("")
+        L.append("*La reduccion es un modelo de decision declarado, no una "
+                 "medicion de entropia. Se calcula con una formula fija sobre "
+                 "la volatilidad observada; no la produce un modelo de lenguaje.*")
+        L.append("")
+
     # --- Comportamiento ----------------------------------------------------
     perfil = anexos.get("perfil") or {}
     if perfil:

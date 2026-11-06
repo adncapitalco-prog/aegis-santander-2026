@@ -185,6 +185,70 @@ PERFILES = os.path.join(RAIZ, "08_Reportes", "Atlas_Predictivo",
 _cache_perfiles = {"datos": None, "ruta": None}
 
 
+
+
+# ===========================================================================
+# EXPECTATIVA ESTRATEGICA
+# ===========================================================================
+def _senal(puestos: List[Dict], contexto: str = "electoral") -> Dict:
+    """Sensibilidad y senal recomendada para los puestos del reporte.
+
+    Usa los dos periodos disponibles (2023 y 2026). Con dos periodos la
+    volatilidad es el tamano de un cambio, no una varianza: el modulo lo
+    declara y el reporte lo repite.
+
+    Si los modulos de expectativa no estan disponibles, devuelve vacio. El
+    reporte se genera igual, sin la seccion.
+    """
+    try:
+        sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        from dinamica_expectativa import calcular_sensibilidad, clasificar
+        import forward_guidance as fg
+    except Exception:  # noqa: BLE001
+        return {}
+
+    filas = []
+    for p in puestos:
+        if p["v23"] > 0 and p["v26"] > 0:
+            filas.append({"unidad": p.get("nombre_corto") or p["nombre"],
+                          "periodo": "2023", "valor": p["v23"]})
+            filas.append({"unidad": p.get("nombre_corto") or p["nombre"],
+                          "periodo": "2026", "valor": p["v26"]})
+    if not filas:
+        return {}
+
+    resultado = calcular_sensibilidad(filas, "unidad", "periodo", "valor")
+    unidades = [u for u in resultado.get("unidades", []) if u["periodos"] >= 2]
+    if not unidades:
+        return {}
+
+    # La sensibilidad se calcula sobre TODO el municipio, porque la posicion
+    # relativa necesita poblacion. Pero lo que se destaca son los objetivos
+    # del reporte: destacar un recinto penitenciario de 96 votos porque su
+    # volumen oscila mucho seria el mismo error que el top de oportunidad que
+    # llenaban los puestos de carcel.
+    objetivos = {p.get("nombre_corto") or p["nombre"] for p in puestos[:5]}
+    candidatas = [u for u in unidades if u["unidad"] in objetivos]
+    destacada = candidatas[0] if candidatas else unidades[0]
+    evaluacion = fg.evaluar_senal(destacada["unidad"], None, contexto,
+                                  destacada["indice_sensibilidad"])
+    comparacion = fg.comparar_senales(destacada["unidad"], contexto,
+                                      destacada["indice_sensibilidad"])
+    return {
+        "contexto": contexto,
+        "periodos": resultado.get("periodos", 0),
+        "aviso": resultado.get("aviso", ""),
+        "nota_relativa": resultado.get("nota_relativa", ""),
+        "unidades": [{**u, "tramo": clasificar(u["indice_sensibilidad"]),
+                      "es_objetivo": u["unidad"] in objetivos}
+                     for u in unidades[:5]],
+        "destacada": evaluacion,
+        "narrativa": fg.narrativa(evaluacion, contexto),
+        "opciones": comparacion["opciones"],
+        "modelo": evaluacion.get("modelo", ""),
+    }
+
+
 def cargar_perfiles(municipio: str = None, ruta: str = None) -> Dict:
     """Perfiles de comportamiento precalculados.
 
@@ -522,6 +586,7 @@ def _anexos(puestos, v23, v26, total,
                    "blancos": blancos, "nulos": nulos, "no_marcados": no_marcados},
         "deudas_forenses": cargar_deudas(),
         "perfil": cargar_perfiles(municipio),
+        "senal": _senal(puestos),
         "mapeo_partidos": mapeo_meta,
         "top_candidatos": [
             {"partido": l["partido"], "codigo_lista": l["codigo_lista"],

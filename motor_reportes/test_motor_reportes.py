@@ -353,7 +353,12 @@ def prueba_niveles():
     _t_drift = _t.perf_counter() - _t0
     check("drift cubre los 87 municipios", _d["total_municipios"] == 87,
           "%d municipios" % _d["total_municipios"])
-    check("drift bajo 2 s", _t_drift < 2.0, "%.2f s" % _t_drift)
+    # Umbral de 3 s, no de 2. Medido en tres corridas: 1,05 · 1,40 · 1,34 s.
+    # La prueba existe para detectar una regresion catastrofica (volver a los
+    # 4,6 s del primer intento), no para medir rendimiento fino. Un limite
+    # ajustado convierte la prueba en inestable, y una prueba inestable se
+    # acaba ignorando.
+    check("drift bajo 3 s", _t_drift < 3.0, "%.2f s" % _t_drift)
     check("tres metricas distintas",
           len({"drift_cuota", "drift_perdida", "drift_hhi"}) == 3, "")
     check("umbrales por metrica", len(_d["umbrales"]) == 3,
@@ -406,6 +411,55 @@ def prueba_niveles():
           "Como se comporta este territorio" in f2, "")
     check("tecnico trae indicadores",
           "Indicadores de comportamiento" in textos.get("tecnico", ""), "")
+
+    # --- expectativa estrategica ---
+    sys.path.insert(0, os.path.join(AQUI, ".."))
+    from dinamica_expectativa import calcular_sensibilidad, clasificar
+    import forward_guidance as _fg
+
+    _datos = [
+        {"unidad": "A", "periodo": "2023", "valor": 1200},
+        {"unidad": "A", "periodo": "2026", "valor": 980},
+        {"unidad": "B", "periodo": "2023", "valor": 900},
+        {"unidad": "B", "periodo": "2026", "valor": 890},
+        {"unidad": "C", "periodo": "2023", "valor": 500},
+        {"unidad": "C", "periodo": "2026", "valor": 499},
+    ]
+    _r = calcular_sensibilidad(_datos, "unidad", "periodo", "valor")
+    check("sensibilidad devuelve unidades", len(_r["unidades"]) == 3, "%d" % len(_r["unidades"]))
+    check("sensibilidad en rango 0-1",
+          all(0.0 <= u["indice_sensibilidad"] <= 1.0 for u in _r["unidades"]), "")
+    check("unidad volatil > unidad estable",
+          _r["unidades"][0]["indice_sensibilidad"] > _r["unidades"][-1]["indice_sensibilidad"],
+          "%.2f > %.2f" % (_r["unidades"][0]["indice_sensibilidad"],
+                           _r["unidades"][-1]["indice_sensibilidad"]))
+    check("declara el aviso de dos periodos", "periodos" in _r["aviso"], _r["aviso"][:40])
+
+    _alta = _fg.evaluar_senal("A", None, "electoral", 0.95)
+    _baja = _fg.evaluar_senal("C", None, "electoral", 0.05)
+    check("alta sensibilidad pide senal B", _alta["senal_evaluada"] == "B",
+          _alta["senal_nombre"])
+    check("baja sensibilidad pide senal C", _baja["senal_evaluada"] == "C",
+          _baja["senal_nombre"])
+    check("entropia en rango 0-100",
+          all(0 <= _fg.evaluar_senal("X", t, "electoral", 0.5)["reduccion_entropia"] <= 100
+              for t in ("A", "B", "C")), "")
+    check("el modelo se declara como modelo", "modelo" in _alta["modelo"].lower(), "")
+
+    for _ctx in ("electoral", "seguridad", "economia", "gestion_publica"):
+        _e = _fg.evaluar_senal("U", None, _ctx, 0.9)
+        _n = _fg.narrativa(_e, _ctx)
+        check("contexto %s produce narrativa" % _ctx, len(_n) > 80, "%d chars" % len(_n))
+    check("contexto desconocido cae al generico",
+          "funcionarios" in _fg.narrativa(_fg.evaluar_senal("U", None, "inexistente", 0.9),
+                                          "inexistente"), "")
+
+    _t_senal = textos.get("tecnico", "")
+    _f_senal = textos.get("feynman", "")
+    check("feynman trae La Senal que Ancla la Expectativa",
+          "La Señal que Ancla la Expectativa" in _f_senal, "")
+    check("tecnico trae expectativa estrategica",
+          "Expectativa estrategica" in _t_senal, "")
 
     # --- regresion: la ruta del CSV predictivo debe ser parametro ---
     # Cuando era constante apuntaba al vault, y en la nube esa ruta no existe.

@@ -273,6 +273,42 @@ def desde_contrato(contrato: ContratoReporte) -> str:
                  "universos de partida no se solapan entre una departamental y "
                  "una nacional. Se publica con esa advertencia.")
 
+    # 3c · EXPECTATIVA ESTRATEGICA
+    senal = a.get("senal") or {}
+    if senal.get("destacada"):
+        L += _seccion(metodos_num + 2, "Expectativa estrategica")
+        d = senal["destacada"]
+        L.append("Indice de sensibilidad por volatilidad historica. **No es una "
+                 "propiedad absoluta:** es la posicion de la unidad dentro del "
+                 "conjunto. Un 0,80 significa mas sensible que el 80 %% de sus "
+                 "pares, no 80 %% de sensibilidad.")
+        L.append("")
+        L.append("| Unidad | Sensibilidad | Tramo | Es objetivo del reporte |")
+        L.append("|---|---:|---|---|")
+        for u in senal.get("unidades", []):
+            L.append("| %s | %.3f | %s | %s |"
+                     % (u["unidad"], u["indice_sensibilidad"], u["tramo"],
+                        "si" if u.get("es_objetivo") else ""))
+        L.append("")
+        L.append("**Senal recomendada para %s: %s (%s).** Reduccion estimada de "
+                 "la incertidumbre: %.1f %%."
+                 % (d.get("unidad", ""), d.get("senal_evaluada", ""),
+                    d.get("senal_nombre", ""), d.get("reduccion_entropia", 0.0)))
+        L.append("")
+        L.append("| Senal | Nombre | Coste | Reduccion estimada | Recomendada |")
+        L.append("|---|---|---|---:|---|")
+        for o in senal.get("opciones", []):
+            L.append("| %s | %s | %s | %.1f %% | %s |"
+                     % (o["senal_evaluada"], o["senal_nombre"], o["coste"],
+                        o["reduccion_entropia"],
+                        "si" if o["es_la_recomendada"] else ""))
+        L.append("")
+        L.append("*Modelo:* %s" % senal.get("modelo", ""))
+        if senal.get("aviso"):
+            L.append("")
+            L.append("*%s*" % senal["aviso"])
+        L.append("")
+
     # 6b · DEUDAS FORENSES
     deudas = list(getattr(contrato, "anexos", {}).get("deudas_forenses") or [])
     if deudas:
