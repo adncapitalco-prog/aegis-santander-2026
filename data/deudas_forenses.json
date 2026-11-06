@@ -1,0 +1,65 @@
+{
+  "version": "1.0",
+  "descripcion": "Deudas forenses abiertas. Una deuda es una cifra que el sistema no puede resolver con la evidencia disponible. Se declara en los tres niveles de reporte en vez de elegir una cifra y callar la otra.",
+  "actualizado": "2026-11-06",
+  "deudas": [
+    {
+      "id": "DF-001",
+      "titulo": "Pacto Historico Camara Santander: 140.771 vs 142.335",
+      "estado": "ABIERTA",
+      "severidad": "baja",
+      "cifras": {
+        "fuente_oficial": 140771,
+        "mwv_vault": 142335,
+        "diferencia": 1564,
+        "diferencia_pct": 1.11
+      },
+      "entidad": {
+        "corporacion": "Camara",
+        "codigo_lista": "3096",
+        "nombre": "PACTO HISTORICO - SANTANDER",
+        "anio": 2026,
+        "departamento": "Santander"
+      },
+      "fuentes": [
+        {
+          "nombre": "catalogo_partidos_verificados.json",
+          "ruta": "08_Reportes/catalogo_partidos_verificados.json",
+          "sha256": "c925eb5d6e9c166fa353fcf9f2e9d7d1b08140bdcd9221ff118d82dd1c224bf9",
+          "aporta": 140771,
+          "origen": "evidencia oficial aportada por el usuario"
+        },
+        {
+          "nombre": "detalle_candidatos_santander.csv",
+          "ruta": "08_Reportes/Atlas_Detallado/detalle_candidatos_santander.csv",
+          "sha256": "8be7b6503023e11eebe5d217cce3d4d195a9cb4525a6dc3c55c4f845eb562300",
+          "aporta": 142335,
+          "origen": "agregacion de 780 filas del registro"
+        }
+      ],
+      "verificaciones_realizadas": [
+        "780 filas, todas con codigo de candidato 'PENDIENTE_CRUCE_2026'",
+        "ninguna zona suma exactamente 1.564",
+        "ningun puesto suma exactamente 1.564",
+        "ningun municipio suma exactamente 1.564",
+        "ningun codigo de Camara suma 140.771 ni 1.564",
+        "excluir zonas especiales 098/099 (10.887 votos) da 131.448, no 140.771",
+        "las combinaciones de 2-4 municipios que suman 1.564 son ruido combinatorio: con 76 municipios por debajo de 1.564 hay decenas de miles de combinaciones posibles"
+      ],
+      "conclusion": "No se puede decidir cual cifra es correcta con la evidencia disponible. Se conserva la del vault como primaria porque es reproducible fila por fila, y se declara la de la fuente oficial al lado. La diferencia de 1.564 votos (1,11 %) queda sin explicar.",
+      "por_que_no_se_resuelve": "La fuente oficial no expone el desglose que produce su total. Sin ese desglose, buscar un subconjunto que cuadre es adivinar."
+    },
+    {
+      "id": "DF-002",
+      "titulo": "Pacto Historico: dos listas distintas con nombres parecidos",
+      "estado": "RESUELTA",
+      "severidad": "ninguna",
+      "cifras": {
+        "camara_3096": 142335,
+        "senado_3063": 157017
+      },
+      "conclusion": "No habia discrepancia. El catalogo habla de 3096 en Camara y la cifra de 157.017 es de 3063 en Senado. Son listas distintas en corporaciones distintas. La comparacion inicial fue un error de lectura, no un conflicto de datos.",
+      "leccion": "Dos codigos con nombres casi identicos y corporaciones distintas se leen como el mismo partido. Toda cifra de partido debe llevar corporacion ademas de codigo."
+    }
+  ]
+}

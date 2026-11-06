@@ -6,7 +6,10 @@
     "data/atlas_santander_maestro.csv": "050a39b4a9e5a9ac65171e4f9533a6f6ea6fe57e5a03cecd9502406107b6b733",
     "data/atlas_santander_partidos.csv": "93faf7657d4b265d1fb53196667f8bf3339b1fc3e51507f1337c09ae83ad9ba1",
     "data/detalle_candidatos_santander.zip": "a3928ddb0839bd545797c8d28c3c24c1f28f407289601c5f0c57ec7e28cf5242",
+    "data/deudas_forenses.json": "db58c8bc02bec39d15d565b5b5245dec59077f83a01a148bdb31773d5568c931",
+    "data/informe_drift.md": "3c506a3954a31773087202f308eb534bd4672141d9d4dc27a0945f928c7d3156",
     "data/mapeo_partidos_2026.json": "aa5da0991770c8772b2d711093d8e27efe840a24fc9275e3122ea8ef1b5022bf",
+    "data/metricas_depto.json": "4b723966ad4055b196fccdcc299bb45b898e1a89aba2232c8408dd4e6ef87084",
     "data/top_candidatos_santander.json": "bcf0539509c8e26dcb3641aafd9ca0d2c687ce14b728b8a7eaee7ac7d651f5bf"
   }
 }
