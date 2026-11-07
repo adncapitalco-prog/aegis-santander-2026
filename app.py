@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # =============================================================================
 # AEGIS-INTELLECT - dashboard estrategico  (GENERADO - no editar a mano)
-# Generado: 2026-11-07 00:41
-# Fuente: @@RUTA_DETALLE@@
+# Generado: 2026-11-07 01:04
+# Fuente: detalle de candidatos (ruta resuelta en tiempo de ejecucion)
 # Sello SHA256 de la fuente: 8be7b6503023e11eebe5d217cce3d4d195a9cb4525a6dc3c55c4f845eb562300
 #
 # Arranque (PowerShell):
