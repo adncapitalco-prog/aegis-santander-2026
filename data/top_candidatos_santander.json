@@ -1,0 +1,436 @@
+{
+  "version": "1.0",
+  "descripcion": "Top 5 candidatos por lista de Santander, Camara 2026. Generado desde el archivo de candidatos de la Registraduria con filtro estructural de circunscripcion.",
+  "fuente": {
+    "archivo": "CANDIDATOS_20260218_115346_01.TXT",
+    "circunscripcion": "127",
+    "encoding": "cp1252",
+    "lineas_totales": 3617
+  },
+  "listas": [
+    {
+      "partido": "PARTIDO CENTRO DEMOCRÁTICO",
+      "codigo_lista": "00011",
+      "numero_lista": "01",
+      "candidatos": [
+        {
+          "nombre": "SERGIO ERNESTO ARENAS CASTELLANOS",
+          "votos": 0,
+          "posicion": 1,
+          "cedula": "13543602"
+        },
+        {
+          "nombre": "LIGIA MIREYA MUÑOZ ARGUELLO",
+          "votos": 0,
+          "posicion": 2,
+          "cedula": "1101693587"
+        },
+        {
+          "nombre": "MIGUEL ANGEL PINTO RUEDA",
+          "votos": 0,
+          "posicion": 3,
+          "cedula": "1098761873"
+        },
+        {
+          "nombre": "MAURICIO MARTINEZ TRIANA",
+          "votos": 0,
+          "posicion": 4,
+          "cedula": "91521436"
+        },
+        {
+          "nombre": "LEONOR PATRICIA CELIS APONTE",
+          "votos": 0,
+          "posicion": 5,
+          "cedula": "63285894"
+        }
+      ]
+    },
+    {
+      "partido": "PARTIDO ECOLOGISTA COLOMBIANO",
+      "codigo_lista": "00025",
+      "numero_lista": "02",
+      "candidatos": [
+        {
+          "nombre": "CARLOS MARIN BELTRAN",
+          "votos": 0,
+          "posicion": 1,
+          "cedula": "13537422"
+        }
+      ]
+    },
+    {
+      "partido": "PARTIDO LIGA GOBERNANTES ANTICORRUPCIÓN - LIGA",
+      "codigo_lista": "00023",
+      "numero_lista": "03",
+      "candidatos": [
+        {
+          "nombre": "LUIS ROBERTO ORDOÑEZ ARDILA",
+          "votos": 0,
+          "posicion": 1,
+          "cedula": "13718718"
+        },
+        {
+          "nombre": "CARLOS EDUARDO MADRID GOMEZ",
+          "votos": 0,
+          "posicion": 2,
+          "cedula": "79954897"
+        },
+        {
+          "nombre": "LEYDI CAROLINA GONZALEZ HERREÑO",
+          "votos": 0,
+          "posicion": 3,
+          "cedula": "1096482559"
+        },
+        {
+          "nombre": "CARLOS ANDRES GIL RODRIGUEZ",
+          "votos": 0,
+          "posicion": 4,
+          "cedula": "1049610599"
+        },
+        {
+          "nombre": "MARIA ALEJANDRA PRADA RINCON",
+          "votos": 0,
+          "posicion": 5,
+          "cedula": "1098742356"
+        }
+      ]
+    },
+    {
+      "partido": "PARTIDO LIBERAL COLOMBIANO",
+      "codigo_lista": "00001",
+      "numero_lista": "04",
+      "candidatos": [
+        {
+          "nombre": "MARIO JOSE CARVAJAL JAIMES",
+          "votos": 0,
+          "posicion": 1,
+          "cedula": "91354439"
+        },
+        {
+          "nombre": "LUISA ADRIANA HERNANDEZ NARANJO",
+          "votos": 0,
+          "posicion": 2,
+          "cedula": "37708145"
+        },
+        {
+          "nombre": "CARLOS LUIS ANAYA VEGA",
+          "votos": 0,
+          "posicion": 3,
+          "cedula": "1232405485"
+        },
+        {
+          "nombre": "JAIRO DEMIS TOQUICA AGUILAR",
+          "votos": 0,
+          "posicion": 4,
+          "cedula": "91326125"
+        },
+        {
+          "nombre": "LADY JOHANNA GOMEZ DIAZ",
+          "votos": 0,
+          "posicion": 5,
+          "cedula": "1098682290"
+        }
+      ]
+    },
+    {
+      "partido": "PACTO HISTÓRICO - SANTANDER",
+      "codigo_lista": "03096",
+      "numero_lista": "05",
+      "candidatos": [
+        {
+          "nombre": "CAMILO ALFONSO TORRES PRADA",
+          "votos": 0,
+          "posicion": 1,
+          "cedula": "80085979"
+        },
+        {
+          "nombre": "YOLANDA SILVA ROMERO",
+          "votos": 0,
+          "posicion": 2,
+          "cedula": "28098855"
+        },
+        {
+          "nombre": "JUAN DE DIOS TARAZONA MENDOZA",
+          "votos": 0,
+          "posicion": 3,
+          "cedula": "5735753"
+        },
+        {
+          "nombre": "MARIA ADALGIZA VELASQUEZ",
+          "votos": 0,
+          "posicion": 4,
+          "cedula": "63460127"
+        },
+        {
+          "nombre": "HERMES ANDRES PARRA GUZMAN",
+          "votos": 0,
+          "posicion": 5,
+          "cedula": "1098747136"
+        }
+      ]
+    },
+    {
+      "partido": "AHORA COLOMBIA",
+      "codigo_lista": "03002",
+      "numero_lista": "06",
+      "candidatos": [
+        {
+          "nombre": "CARLOS ROBERTO ALEXANDER AVILA AGUILAR",
+          "votos": 0,
+          "posicion": 1,
+          "cedula": "91498363"
+        },
+        {
+          "nombre": "LAURA CRISTINA HERRERA LA ROTTA",
+          "votos": 0,
+          "posicion": 2,
+          "cedula": "37749246"
+        },
+        {
+          "nombre": "NIXON YECID GUZMAN BUILES",
+          "votos": 0,
+          "posicion": 3,
+          "cedula": "79564818"
+        },
+        {
+          "nombre": "MARIA FERNANDA ESTUPIÑAN TARAZONA",
+          "votos": 0,
+          "posicion": 4,
+          "cedula": "37749420"
+        },
+        {
+          "nombre": "LUIS ROBERTO SCHMALBACH CRUZ",
+          "votos": 0,
+          "posicion": 5,
+          "cedula": "13883460"
+        }
+      ]
+    },
+    {
+      "partido": "COALICIÓN FUERZA CIUDADANA",
+      "codigo_lista": "03133",
+      "numero_lista": "07",
+      "candidatos": [
+        {
+          "nombre": "JAIRO REINALDO CALA SUAREZ",
+          "votos": 0,
+          "posicion": 1,
+          "cedula": "12620188"
+        },
+        {
+          "nombre": "YANETH CECILIA ALDANA VARGAS",
+          "votos": 0,
+          "posicion": 2,
+          "cedula": "24230434"
+        },
+        {
+          "nombre": "JAIME ROJAS LOPEZ",
+          "votos": 0,
+          "posicion": 3,
+          "cedula": "91480800"
+        },
+        {
+          "nombre": "LUZ DARY LILIANA CORDOBA SUAREZ",
+          "votos": 0,
+          "posicion": 4,
+          "cedula": "1098622699"
+        },
+        {
+          "nombre": "ELBERT VARGAS CUBIDES",
+          "votos": 0,
+          "posicion": 5,
+          "cedula": "91363385"
+        }
+      ]
+    },
+    {
+      "partido": "AVANZA",
+      "codigo_lista": "03125",
+      "numero_lista": "08",
+      "candidatos": [
+        {
+          "nombre": "ALEIDA NOGUERA PUERTO",
+          "votos": 0,
+          "posicion": 1,
+          "cedula": "37581607"
+        },
+        {
+          "nombre": "LUDWING MANTILLA CASTRO",
+          "votos": 0,
+          "posicion": 2,
+          "cedula": "91492770"
+        },
+        {
+          "nombre": "KARINA CHACON DIAZ",
+          "votos": 0,
+          "posicion": 3,
+          "cedula": "1098669924"
+        },
+        {
+          "nombre": "YESID LEONARDO SILVA PARADA",
+          "votos": 0,
+          "posicion": 4,
+          "cedula": "1102349589"
+        },
+        {
+          "nombre": "WILLIAM MAURICIO TORRES CARDENAS",
+          "votos": 0,
+          "posicion": 5,
+          "cedula": "91233779"
+        }
+      ]
+    },
+    {
+      "partido": "VERDE EN MARCHA",
+      "codigo_lista": "03126",
+      "numero_lista": "09",
+      "candidatos": [
+        {
+          "nombre": "LUIS FERLEY SIERRA JAIMES",
+          "votos": 0,
+          "posicion": 1,
+          "cedula": "1098653533"
+        },
+        {
+          "nombre": "YESICA YENIRE RAVELO GARCIA",
+          "votos": 0,
+          "posicion": 2,
+          "cedula": "1095935403"
+        },
+        {
+          "nombre": "DANIS MARIBEL AYALA SERRANO",
+          "votos": 0,
+          "posicion": 3,
+          "cedula": "63532097"
+        },
+        {
+          "nombre": "JONATHAN LEONARDO DELGADO NEIRA",
+          "votos": 0,
+          "posicion": 4,
+          "cedula": "13741799"
+        },
+        {
+          "nombre": "CARLOS FELIPE PARRA ROJAS",
+          "votos": 0,
+          "posicion": 5,
+          "cedula": "1098674983"
+        }
+      ]
+    },
+    {
+      "partido": "CR-ASI-CJL",
+      "codigo_lista": "03048",
+      "numero_lista": "10",
+      "candidatos": [
+        {
+          "nombre": "JUAN CARLOS CELIS PAEZ",
+          "votos": 0,
+          "posicion": 1,
+          "cedula": "91531180"
+        },
+        {
+          "nombre": "EDWIN GILBERTO BALLESTEROS ARCHILA",
+          "votos": 0,
+          "posicion": 2,
+          "cedula": "13542477"
+        },
+        {
+          "nombre": "ERIKA JOHANA GOMEZ DELGADO",
+          "votos": 0,
+          "posicion": 3,
+          "cedula": "1100966583"
+        },
+        {
+          "nombre": "LUZ MARINA TOLOZA ROJAS",
+          "votos": 0,
+          "posicion": 4,
+          "cedula": "63479243"
+        },
+        {
+          "nombre": "JOSE ALBERTO CALDERON CASTAÑEDA",
+          "votos": 0,
+          "posicion": 5,
+          "cedula": "13928084"
+        }
+      ]
+    },
+    {
+      "partido": "PARTIDO CONSERVADOR COLOMBIANO",
+      "codigo_lista": "00002",
+      "numero_lista": "11",
+      "candidatos": [
+        {
+          "nombre": "LINA MARIA BARRERA RUEDA",
+          "votos": 0,
+          "posicion": 1,
+          "cedula": "37894008"
+        },
+        {
+          "nombre": "SILVIA NATALIA FANDIÑO ARDILA",
+          "votos": 0,
+          "posicion": 2,
+          "cedula": "1095836131"
+        },
+        {
+          "nombre": "JUAN CARLOS OROZCO GOMEZ",
+          "votos": 0,
+          "posicion": 3,
+          "cedula": "13540277"
+        },
+        {
+          "nombre": "HENRY RIAÑO CASTILLO",
+          "votos": 0,
+          "posicion": 4,
+          "cedula": "91478624"
+        },
+        {
+          "nombre": "MARIA DEL CARMEN MEZA ARQUEZ",
+          "votos": 0,
+          "posicion": 5,
+          "cedula": "28295624"
+        }
+      ]
+    },
+    {
+      "partido": "PARTIDO DE LA UNIÓN POR LA GENTE - PARTIDO DE LA U",
+      "codigo_lista": "00008",
+      "numero_lista": "12",
+      "candidatos": [
+        {
+          "nombre": "SERGIO ISNARDO MUÑOZ VILLARREAL",
+          "votos": 0,
+          "posicion": 1,
+          "cedula": "91492265"
+        },
+        {
+          "nombre": "OSCAR MIGUEL JOYA ARENALES",
+          "votos": 0,
+          "posicion": 2,
+          "cedula": "13924612"
+        },
+        {
+          "nombre": "JULIAN ANDRES FONSECA BERMUDEZ",
+          "votos": 0,
+          "posicion": 3,
+          "cedula": "1098608121"
+        },
+        {
+          "nombre": "LUZ ELENA RODRIGUEZ SANCHEZ",
+          "votos": 0,
+          "posicion": 4,
+          "cedula": "1005148310"
+        },
+        {
+          "nombre": "FRANCY ELENA ALVAREZ OSPINO",
+          "votos": 0,
+          "posicion": 5,
+          "cedula": "37842244"
+        }
+      ]
+    }
+  ],
+  "resumen": {
+    "listas": 12,
+    "candidatos": 56
+  }
+}
