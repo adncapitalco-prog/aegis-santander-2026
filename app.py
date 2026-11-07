@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 # =============================================================================
+# MARCADOR_VERSION: AEGIS-v2.0-ESCUDO-LIMPIO
+# Si esta linea NO aparece en el app.py que corre en la nube, el archivo
+# desplegado no es este. Es la forma mas rapida de distinguir una version
+# vieja de una nueva sin comparar hashes.
+# =============================================================================
 # AEGIS-INTELLECT - dashboard estrategico  (GENERADO - no editar a mano)
-# Generado: 2026-11-07 01:04
+# Generado: 2026-11-07 01:20
 # Fuente: detalle de candidatos (ruta resuelta en tiempo de ejecucion)
 # Sello SHA256 de la fuente: 8be7b6503023e11eebe5d217cce3d4d195a9cb4525a6dc3c55c4f845eb562300
 #
