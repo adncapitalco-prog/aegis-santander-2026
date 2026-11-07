@@ -280,6 +280,70 @@ def verificar_esquema(raiz: str, verbose: bool) -> int:
     return EXIT_OK
 
 
+
+
+# =============================================================================
+# VERIFICACION 4 · GOBERNANZA (escudo determinista)
+# =============================================================================
+def verificar_gobernanza(raiz: str, verbose: bool = False) -> int:
+    """Corre el escaner sobre el codigo y bloquea si hay defectos.
+
+    Fail-closed: si el escaner no se puede cargar, es un fallo y no un aviso.
+    Un guardia que se ausenta en silencio es peor que uno que no existe,
+    porque el que no existe se nota.
+    """
+    print()
+    print("VERIFICACION 4 · GOBERNANZA (escudo determinista)")
+    print("-" * 68)
+
+    try:
+        import importlib
+        escaner = importlib.import_module("skill_pre_flight_scan")
+    except ImportError:
+        # el paquete de despliegue lo lleva junto al guardian
+        candidato = os.path.join(raiz, "skill_pre_flight_scan.py")
+        if not os.path.isfile(candidato):
+            print("  [%s] escaner de gobernanza AUSENTE" % "ERROR")
+            print("  skill_pre_flight_scan.py debe viajar con el guardian.")
+            return EXIT_INTEGRIDAD
+        sys.path.insert(0, raiz)
+        try:
+            import importlib
+            escaner = importlib.import_module("skill_pre_flight_scan")
+        except ImportError as error:
+            print("  [%s] escaner ilegible: %s" % ("ERROR", error))
+            return EXIT_INTEGRIDAD
+
+    from pathlib import Path
+    # El codigo del producto vive en 06_Herramientas/ dentro del vault y en la
+    # raiz dentro del paquete de despliegue. Escanear la raiz del vault metia
+    # scripts exploratorios heredados (generar_mapa.py, con folium y rutas
+    # fijas) en el mismo control que el codigo que si se despliega.
+    candidato = Path(raiz) / "06_Herramientas"
+    base_codigo = candidato if (candidato / "motor_reportes").is_dir() else Path(raiz)
+    raices = [base_codigo]
+    for sub in ("motor_reportes", "agente_intellect", "aegis_auditor"):
+        d = base_codigo / sub
+        if d.is_dir():
+            raices.append(d)
+
+    informe = escaner.escanear(raices, verbose=False)
+    if informe["limpio"]:
+        print("  [%s] %d archivos · sin rutas absolutas, sin eval, "
+              "sin librerias no autorizadas" % ("OK", informe["archivos_escaneados"]))
+        return EXIT_OK
+
+    print("  [%s] %d defectos en %d archivos"
+          % ("ERROR", len(informe["alertas"]), informe["archivos_escaneados"]))
+    for alerta in informe["alertas"]:
+        print("    %s linea %d · %s" % (alerta["archivo"], alerta["linea"], alerta["tipo"]))
+        print("      %s" % alerta["detalle"])
+    print()
+    print("  El codigo no puede desplegarse con rutas absolutas, ejecucion")
+    print("  dinamica ni librerias fuera de la lista blanca.")
+    return EXIT_INTEGRIDAD
+
+
 # =============================================================================
 # MAIN
 # =============================================================================
@@ -318,6 +382,10 @@ def main(argv=None) -> int:
         return codigo
 
     codigo = verificar_esquema(raiz, args.verbose)
+    if codigo != EXIT_OK:
+        return codigo
+
+    codigo = verificar_gobernanza(raiz, args.verbose)
     if codigo != EXIT_OK:
         return codigo
 
