@@ -1,6 +1,0 @@
-AEGIS-INTELLECT
-version    : v2.0-ESCUDO-LIMPIO
-generado   : 2026-11-07 17:53
-app.py     : 48977 bytes · sha256 c7a2c6dd8224e8493203faa396352512b0317381acf8ab800ec2bf5e2dd902fe
-marcador   : busca MARCADOR_VERSION en la linea 2 de app.py
-esperado   : 0 rutas absolutas · 0 subprocess · escudo exit 0
