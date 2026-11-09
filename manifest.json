@@ -11,7 +11,7 @@
     "aegis_auditor/forensic_manifest.json": "329da0aa44c1a70df86e923190364ff0284f573a29ef2aec4100e4dff612b06c",
     "aegis_auditor/integration_test.py": "abcb033e0b85e275067776fa36360d4cc5192f0aba7259c61ebc2ac56aef317a",
     "aegis_auditor/lessons_learned.md": "70252bec62bce5b0d721416b6717452ee8eab804b9dea784693e41397018fa72",
-    "app.py": "c7a2c6dd8224e8493203faa396352512b0317381acf8ab800ec2bf5e2dd902fe",
+    "app.py": "fe312ee4ffda2f0dc15556a3f33c64447800ce9f9d034ed53b3e4a37d29d3279",
     "data/anomalias_y_clusters.csv": "8632c44e922b02e93e1aa878d7e3156d4e7ffc65d81ff90ab77101b2e185459d",
     "data/atlas_santander_maestro.csv": "050a39b4a9e5a9ac65171e4f9533a6f6ea6fe57e5a03cecd9502406107b6b733",
     "data/atlas_santander_partidos.csv": "93faf7657d4b265d1fb53196667f8bf3339b1fc3e51507f1337c09ae83ad9ba1",
