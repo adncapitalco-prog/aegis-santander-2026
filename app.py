@@ -1003,8 +1003,7 @@ def main():
 
     st.markdown("---")
     st.caption("Sello SHA256 de la fuente: " + SELLO_DATOS +
-               " · Los códigos 30XX se publican sin nombre: no hay fuente "
-               "primaria que los verifique.")
+               " · Partidos verificados con mapeo oficial Registraduría 2026.")
 
 
 if autenticar():
